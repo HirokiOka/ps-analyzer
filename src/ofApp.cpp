@@ -1,40 +1,37 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
+
 void ofApp::setup(){
   ofBackground(0);
-  ofSetFrameRate(60);
-  
+  ofSetFrameRate(30);
   //ofSetLogLevel("ofxCsv", OF_LOG_VERBOSE);
+  ofxDatGuiComponent* component = nullptr;
 
-  if (csv.load("fizzbuzz_processed.csv")) {
-    cout << "csv loaded";
+  if (of_csv.load("fizzbuzz_processed.csv") && mb_csv.load("fizzbuzz_scratch_mybeat.csv")) {
+    for (size_t i = 0; i < PLOTTER_NUM; ++i) {
+
+      if (i < AU_NUM) {
+        string name = of_csv[0][AU_INDEX_HEAD + i];
+        plotters[i] = new ofxDatGuiValuePlotter(name, 0, 1);
+        plotters[i]->setDrawMode(ofxDatGuiGraph::LINES);
+        component = plotters[i];
+        i > 9 ? component-> setPosition(140, (i % 8) * 80) : component -> setPosition(0, i * 80);
+      } else {
+        string name = mb_csv[6][i-9];
+        plotters[i] = new ofxDatGuiValuePlotter(name, 0, 100);
+        plotters[i]->setDrawMode(ofxDatGuiGraph::LINES);
+        component = plotters[i];
+        component->setPosition(140, (i % 8) * 80);
+      }
+
+      component->setWidth(200, 60);
+      components.push_back(component);
+    }
   }
 
-  gui = new ofxDatGui( ofxDatGuiAnchor::TOP_LEFT );
-  AU01_c = gui->addValuePlotter("AU01_c", 0, 1);
-  AU02_c = gui->addValuePlotter("AU02_c", 0, 1);
-  AU04_c = gui->addValuePlotter("AU04_c", 0, 1);
-  AU05_c = gui->addValuePlotter("AU05_c", 0, 1);
-  AU06_c = gui->addValuePlotter("AU06_c", 0, 1);
-  AU07_c = gui->addValuePlotter("AU07_c", 0, 1);
-  AU09_c = gui->addValuePlotter("AU09_c", 0, 1);
-  AU10_c = gui->addValuePlotter("AU10_c", 0, 1);
-  AU12_c = gui->addValuePlotter("AU12_c", 0, 1);
-  AU14_c = gui->addValuePlotter("AU14_c", 0, 1);
-  AU15_c = gui->addValuePlotter("AU15_c", 0, 1);
-  AU17_c = gui->addValuePlotter("AU17_c", 0, 1);
-  AU20_c = gui->addValuePlotter("AU20_c", 0, 1);
-  AU23_c = gui->addValuePlotter("AU23_c", 0, 1);
-  AU25_c = gui->addValuePlotter("AU25_c", 0, 1);
-  AU26_c = gui->addValuePlotter("AU26_c", 0, 1);
-  AU28_c = gui->addValuePlotter("AU28_c", 0, 1);
-  AU45_c = gui->addValuePlotter("AU45_c", 0, 1);
-
-  faceMovie.load("movies/fizzbuzz_processed.mp4");
-  faceMovie.play();
-  screenMovie.load("movies/fizzbuzz_scratch.mp4");
-  screenMovie.play();
+  if (faceMovie.load("movies/fizzbuzz_processed.mp4")) faceMovie.play();
+  if (screenMovie.load("movies/fizzbuzz_scratch.mp4")) screenMovie.play();
 }
   
 
@@ -44,49 +41,25 @@ void ofApp::update(){
   screenMovie.update();
 
   int current_frame = faceMovie.getCurrentFrame();
+
   if (current_frame > 0) {
-    gaze_0_x = stof(csv[current_frame][5]);
-    gaze_0_y = stof(csv[current_frame][6]);
-    gaze_1_x = stof(csv[current_frame][8]);
-    gaze_1_y = stof(csv[current_frame][9]);
+    gaze_0_x = stof(of_csv[current_frame][5]);
+    gaze_0_y = stof(of_csv[current_frame][6]);
+    gaze_1_x = stof(of_csv[current_frame][8]);
+    gaze_1_y = stof(of_csv[current_frame][9]);
 
-    float current_au01_c = stof(csv[current_frame][679]);
-    float current_au02_c = stof(csv[current_frame][680]);
-    float current_au04_c = stof(csv[current_frame][681]);
-    float current_au05_c = stof(csv[current_frame][682]);
-    float current_au06_c = stof(csv[current_frame][683]);
-    float current_au07_c = stof(csv[current_frame][684]);
-    float current_au09_c = stof(csv[current_frame][685]);
-    float current_au10_c = stof(csv[current_frame][686]);
-    float current_au12_c = stof(csv[current_frame][687]);
-    float current_au14_c = stof(csv[current_frame][688]);
-    float current_au15_c = stof(csv[current_frame][689]);
-    float current_au17_c = stof(csv[current_frame][690]);
-    float current_au20_c = stof(csv[current_frame][691]);
-    float current_au23_c = stof(csv[current_frame][692]);
-    float current_au25_c = stof(csv[current_frame][693]);
-    float current_au26_c = stof(csv[current_frame][694]);
-    float current_au28_c = stof(csv[current_frame][695]);
-    float current_au45_c = stof(csv[current_frame][696]);
-
-    AU01_c->setValue(current_au01_c);
-    AU02_c->setValue(current_au02_c);
-    AU04_c->setValue(current_au04_c);
-    AU05_c->setValue(current_au05_c);
-    AU06_c->setValue(current_au06_c);
-    AU07_c->setValue(current_au07_c);
-    AU09_c->setValue(current_au09_c);
-    AU10_c->setValue(current_au10_c);
-    AU12_c->setValue(current_au12_c);
-    AU14_c->setValue(current_au14_c);
-    AU15_c->setValue(current_au15_c);
-    AU17_c->setValue(current_au17_c);
-    AU20_c->setValue(current_au20_c);
-    AU23_c->setValue(current_au23_c);
-    AU25_c->setValue(current_au25_c);
-    AU26_c->setValue(current_au26_c);
-    AU28_c->setValue(current_au28_c);
-    AU45_c->setValue(current_au45_c);
+    for (size_t i = 0; i < components.size(); ++i) {
+      float current_value;
+      if (i < AU_NUM ) {
+        current_value = stof(of_csv[current_frame][AU_INDEX_HEAD + i]);
+      } else {
+        /*
+        current_value = stof(mb_csv[current_frame][i - 9]);
+        */
+      }
+      plotters[i]->setValue(current_value);
+      components[i]->update();
+    }
   }
 }
 
@@ -101,6 +74,9 @@ void ofApp::draw(){
   float gaze_y = ofMap(gaze_0_y, -1, 1, 0, screenMovie.getHeight()); 
   ofDrawCircle(gaze_x, gaze_y+200, 5);
 
+  for (size_t i = 0; i < components.size(); ++i) {
+    components[i]->draw();
+  }
 }
 
 //--------------------------------------------------------------
@@ -120,12 +96,12 @@ void ofApp::mouseMoved(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-  faceMovie.setPosition((float)x / (float)ofGetWidth());
+  //faceMovie.setPosition((float)x / (float)ofGetWidth());
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-  faceMovie.setPaused(true);
+  //faceMovie.setPaused(true);
 }
 
 //--------------------------------------------------------------

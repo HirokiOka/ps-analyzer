@@ -24,31 +24,17 @@ class ofApp : public ofBaseApp{
 
     ofVideoPlayer faceMovie;
     ofVideoPlayer screenMovie;
+    ofxCsv of_csv;
+    ofxCsv mb_csv;
 
-    ofxCsv csv;
-    //float AU_values[18];
+    static const int AU_NUM = 18;
+    static const int PLOTTER_NUM = 20;
+    static const int AU_INDEX_HEAD = 696;
     float gaze_0_x, gaze_0_y;
     float gaze_1_x, gaze_1_y;
-    
-    ofxDatGuiValuePlotter* AU01_c;
-    ofxDatGuiValuePlotter* AU02_c;
-    ofxDatGuiValuePlotter* AU04_c;
-    ofxDatGuiValuePlotter* AU05_c;
-    ofxDatGuiValuePlotter* AU06_c;
-    ofxDatGuiValuePlotter* AU07_c;
-    ofxDatGuiValuePlotter* AU09_c;
-    ofxDatGuiValuePlotter* AU10_c;
-    ofxDatGuiValuePlotter* AU12_c;
-    ofxDatGuiValuePlotter* AU14_c;
-    ofxDatGuiValuePlotter* AU15_c;
-    ofxDatGuiValuePlotter* AU17_c;
-    ofxDatGuiValuePlotter* AU20_c;
-    ofxDatGuiValuePlotter* AU23_c;
-    ofxDatGuiValuePlotter* AU25_c;
-    ofxDatGuiValuePlotter* AU26_c;
-    ofxDatGuiValuePlotter* AU28_c;
-    ofxDatGuiValuePlotter* AU45_c;
 
-    ofxDatGui* gui;
+    ofxDatGuiValuePlotter* plotters[PLOTTER_NUM];
+    vector<ofxDatGuiComponent*> components;
+
 };
 
