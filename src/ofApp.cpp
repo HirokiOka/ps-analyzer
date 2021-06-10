@@ -6,44 +6,36 @@ void ofApp::setup(){
   //ofSetLogLevel("ofxCsv", OF_LOG_VERBOSE);
   ofBackground(0);
   ofSetFrameRate(30);
-  ofxDatGuiComponent* component = nullptr;
+  verdana.load("ofxbraitsch/fonts/Verdana.ttf", 18);
 
   if (faceMovie.load("movies/fizzbuzz_processed.mp4")) faceMovie.play();
   if (screenMovie.load("movies/fizzbuzz_scratch.mp4")) screenMovie.play();
 
+  ofxDatGuiComponent* component = nullptr;
+
   movie_duration = faceMovie.getDuration();
-  movie_slider = new ofxDatGuiSlider("p", 0.0, movie_duration);
+  movie_slider = new ofxDatGuiSlider("", 0.0, movie_duration);
   movie_slider->onSliderEvent(this, &ofApp::onSliderEvent);
   slider_component = movie_slider;
   slider_component->setPosition(400, 340);
   slider_component->setWidth(640, 0);
 
-  if (of_csv.load("fizzbuzz_processed.csv") && mb_csv.load("fizzbuzz_scratch_mybeat.csv")) {
+  matrix = new ofxDatGuiMatrix("MATRIX", AU_NUM, true);
+  matrix->setPosition(200, 600);
+
+
+  if (of_csv.load("fizzbuzz_processed.csv")) {
     for (size_t i = 0; i < PLOTTER_NUM; ++i) {
-      if (i < AU_NUM) {
-        string name = of_csv[0][AU_INDEX_HEAD + i];
-        plotters[i] = new ofxDatGuiValuePlotter(name, 0, 1);
-        plotters[i]->setDrawMode(ofxDatGuiGraph::LINES);
-        plotters[i]->setSpeed(3.0);
-        component = plotters[i];
-        //component->setBackgroundColor(ofColor(0, 255, 0));
-
-        if (i < 9) {
-          component -> setPosition(0, i * 80);
-        } else {
-          component -> setPosition(200, (i % 10) * 80);
-        }
-
+      string AU_label = of_csv[0][AU_INDEX_HEAD + i];
+      plotters[i] = new ofxDatGuiValuePlotter(AU_label, 0, 5);
+      plotters[i]->setDrawMode(ofxDatGuiGraph::LINES);
+      plotters[i]->setSpeed(3.5);
+      component = plotters[i];
+      if (i < 10) {
+        component -> setPosition(0, i * 80);
       } else {
-        string name = mb_csv[5][i-9];
-        plotters[i] = new ofxDatGuiValuePlotter(name, 0, 3000);
-        plotters[i]->setDrawMode(ofxDatGuiGraph::LINES);
-        plotters[i]->setSpeed(3.0);
-        component = plotters[i];
-        //component->setBackgroundColor(ofColor(255, 0, 0));
-        component->setPosition(200, (i % 10) * 80);
+        component -> setPosition(200, (i % 10) * 80);
       }
-
       component->setWidth(200, 60);
       components.push_back(component);
     }
@@ -68,11 +60,7 @@ void ofApp::update(){
 
     for (size_t i = 0; i < components.size(); ++i) {
       float current_value = 0.0;
-      if (i < AU_NUM ) {
-        current_value = stof(of_csv[current_frame][AU_INDEX_HEAD + i]);
-      } else {
-       //current_value = stof(mb_csv[elapsed_movie_time + 150][i - 9]);
-      }
+      current_value = stof(of_csv[current_frame][AU_INDEX_HEAD + i]);
       plotters[i]->setValue(current_value);
       components[i]->update();
     }
@@ -80,11 +68,16 @@ void ofApp::update(){
   if (!is_mouse_pressed) movie_slider->setValue(elapsed_movie_time);
   slider_component->update();
 
+  matrix->update();
+
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
   ofSetColor(255);
+  
+  //verdana.drawString("Blink: ", 200, 600);
+
   faceMovie.draw(400+640, 0, -640, 360);
   screenMovie.draw(400, 360, 640, 360);
 
@@ -97,6 +90,8 @@ void ofApp::draw(){
     components[i]->draw();
   }
   slider_component->draw();
+
+  matrix->draw();
 }
 
 //--------------------------------------------------------------
