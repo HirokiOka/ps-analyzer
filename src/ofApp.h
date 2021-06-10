@@ -22,6 +22,8 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
+    void onSliderEvent(ofxDatGuiSliderEvent e);
+
     ofVideoPlayer faceMovie;
     ofVideoPlayer screenMovie;
     ofxCsv of_csv;
@@ -32,8 +34,13 @@ class ofApp : public ofBaseApp{
     static const int AU_INDEX_HEAD = 696;
     float gaze_0_x, gaze_0_y;
     float gaze_1_x, gaze_1_y;
+    float elapsed_movie_time = 0.0;
+    float movie_duration = 0.0;
+    bool is_mouse_pressed = false;
 
     ofxDatGuiValuePlotter* plotters[PLOTTER_NUM];
+    ofxDatGuiSlider* movie_slider;
+    ofxDatGuiComponent* slider_component;
     vector<ofxDatGuiComponent*> components;
 
 };
