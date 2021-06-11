@@ -20,9 +20,18 @@ void ofApp::setup(){
   slider_component->setPosition(400, 340);
   slider_component->setWidth(640, 0);
 
-  matrix = new ofxDatGuiMatrix("MATRIX", AU_NUM, true);
-  matrix->setPosition(200, 600);
+  matrix = new ofxDatGuiMatrix("AU", AU_NUM, true);
+  matrix->setRadioMode(false);
+  matrix->setPosition(200, 560);
+  matrix->setWidth(200, 60);
 
+  /*
+  for (size_t i = 0; i < AU_NUM; ++i) {
+    if (matrix->getButtonAtIndex(i)->getSelected()) {
+      cout << matrix->getButtonAtIndex(i) << endl;
+    }
+  }
+  */
 
   if (of_csv.load("fizzbuzz_processed.csv")) {
     for (size_t i = 0; i < PLOTTER_NUM; ++i) {
@@ -52,7 +61,6 @@ void ofApp::update(){
   elapsed_movie_time = current_frame / 30;
 
   if (current_frame > 0 && elapsed_movie_time > 0) {
-
     gaze_0_x = stof(of_csv[current_frame][5]);
     gaze_0_y = stof(of_csv[current_frame][6]);
     gaze_1_x = stof(of_csv[current_frame][8]);
@@ -65,9 +73,19 @@ void ofApp::update(){
       components[i]->update();
     }
   }
+
   if (!is_mouse_pressed) movie_slider->setValue(elapsed_movie_time);
   slider_component->update();
-
+  
+  if (current_frame > 0) {
+    for (int i = AU_C_INDEX_HEAD; i < AU_C_INDEX_END + 1; ++i) {
+      int au_c_value = stoi(of_csv[current_frame][i]);
+      if(stoi(of_csv[current_frame][i])) {
+        int matrix_index = i - AU_C_INDEX_HEAD; 
+        cout << matrix->getButtonAtIndex(matrix_index);
+      }
+    }
+  }
   matrix->update();
 
 }
@@ -75,8 +93,6 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
   ofSetColor(255);
-  
-  //verdana.drawString("Blink: ", 200, 600);
 
   faceMovie.draw(400+640, 0, -640, 360);
   screenMovie.draw(400, 360, 640, 360);
@@ -86,11 +102,8 @@ void ofApp::draw(){
   float gaze_y = ofMap(gaze_0_y, -1, 1, 0, screenMovie.getHeight()); 
   ofDrawCircle(gaze_x, gaze_y+200, 5);
 
-  for (size_t i = 0; i < components.size(); ++i) {
-    components[i]->draw();
-  }
+  for (size_t i = 0; i < components.size(); ++i) components[i]->draw();
   slider_component->draw();
-
   matrix->draw();
 }
 

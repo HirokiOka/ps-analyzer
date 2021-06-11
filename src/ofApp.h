@@ -34,8 +34,8 @@ class ofApp : public ofBaseApp{
     static const int AU_INDEX_HEAD = 679;
     static const int AU_C_INDEX_HEAD = 696;
     static const int AU_C_INDEX_END = 713;
-    float gaze_0_x, gaze_0_y;
-    float gaze_1_x, gaze_1_y;
+    float gaze_0_x = 0.0, gaze_0_y = 0.0;
+    float gaze_1_x = 0.0, gaze_1_y = 0.0;
     float elapsed_movie_time = 0.0;
     float movie_duration = 0.0;
     bool is_mouse_pressed = false;
