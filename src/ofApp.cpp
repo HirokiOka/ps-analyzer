@@ -25,7 +25,6 @@ void ofApp::setup(){
   matrix->setPosition(200, 560);
   matrix->setWidth(200, 60);
   matrix->setRadioMode(true);
-  for (size_t i = 0; i < AU_NUM; ++i) matrix->getButtonAtIndex(i)->setSelected(true);
 
   if (of_csv.load("fizzbuzz_processed.csv")) {
     for (size_t i = 0; i < PLOTTER_NUM; ++i) {
@@ -42,6 +41,14 @@ void ofApp::setup(){
       component->setWidth(200, 60);
       components.push_back(component);
     }
+  }
+
+  for (size_t i = 0; i < AU_NUM; ++i) {
+    string AU_labels = of_csv[0][AU_C_INDEX_HEAD + i];
+    string num = ofToString(AU_labels[3]) + ofToString(AU_labels[4]);
+    int label = stoi(num);
+    matrix->getButtonAtIndex(i)->setMIndex(label-1);
+    matrix->getButtonAtIndex(i)->setSelected(true);
   }
 }
 
@@ -78,7 +85,7 @@ void ofApp::update(){
       int matrix_index = i - AU_C_INDEX_HEAD; 
 
       if(stoi(of_csv[current_frame][i])) {
-        cout << "matrix index: " << matrix_index << "\n";
+        //cout << "matrix index: " << matrix_index << "\n";
         matrix->getButtonAtIndex(matrix_index-1)->setSelected(false);
       } else {
         matrix->getButtonAtIndex(matrix_index-1)->setSelected(true);
