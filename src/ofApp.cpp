@@ -3,14 +3,15 @@
 //--------------------------------------------------------------
 
 void ofApp::setup(){
-  //ofSetLogLevel("ofxCsv", OF_LOG_VERBOSE);
   ofBackground(0);
   ofSetFrameRate(30);
   verdana.load("ofxbraitsch/fonts/Verdana.ttf", 18);
 
+  //load and play movies
   if (faceMovie.load("movies/fizzbuzz_processed.mp4")) faceMovie.play();
   if (screenMovie.load("movies/fizzbuzz_scratch.mp4")) screenMovie.play();
 
+  //settings about ofxDatGui
   ofxDatGuiComponent* component = nullptr;
 
   movie_duration = faceMovie.getDuration();
@@ -20,18 +21,11 @@ void ofApp::setup(){
   slider_component->setPosition(400, 340);
   slider_component->setWidth(640, 0);
 
-  matrix = new ofxDatGuiMatrix("AU", AU_NUM, true);
-  matrix->setRadioMode(false);
+  matrix = new ofxDatGuiMatrix("AU_C", AU_NUM, true);
   matrix->setPosition(200, 560);
   matrix->setWidth(200, 60);
-
-  /*
-  for (size_t i = 0; i < AU_NUM; ++i) {
-    if (matrix->getButtonAtIndex(i)->getSelected()) {
-      cout << matrix->getButtonAtIndex(i) << endl;
-    }
-  }
-  */
+  matrix->setRadioMode(true);
+  for (size_t i = 0; i < AU_NUM; ++i) matrix->getButtonAtIndex(i)->setSelected(true);
 
   if (of_csv.load("fizzbuzz_processed.csv")) {
     for (size_t i = 0; i < PLOTTER_NUM; ++i) {
@@ -49,11 +43,11 @@ void ofApp::setup(){
       components.push_back(component);
     }
   }
-
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+
   faceMovie.update();
   screenMovie.update();
 
@@ -73,6 +67,7 @@ void ofApp::update(){
       components[i]->update();
     }
   }
+  
 
   if (!is_mouse_pressed) movie_slider->setValue(elapsed_movie_time);
   slider_component->update();
@@ -80,14 +75,18 @@ void ofApp::update(){
   if (current_frame > 0) {
     for (int i = AU_C_INDEX_HEAD; i < AU_C_INDEX_END + 1; ++i) {
       int au_c_value = stoi(of_csv[current_frame][i]);
+      int matrix_index = i - AU_C_INDEX_HEAD; 
+
       if(stoi(of_csv[current_frame][i])) {
-        int matrix_index = i - AU_C_INDEX_HEAD; 
-        cout << matrix->getButtonAtIndex(matrix_index);
+        cout << "matrix index: " << matrix_index << "\n";
+        matrix->getButtonAtIndex(matrix_index-1)->setSelected(false);
+      } else {
+        matrix->getButtonAtIndex(matrix_index-1)->setSelected(true);
       }
     }
   }
-  matrix->update();
 
+  matrix->update();
 }
 
 //--------------------------------------------------------------
@@ -111,10 +110,13 @@ void ofApp::draw(){
 //
 void ofApp::onSliderEvent(ofxDatGuiSliderEvent e) {
   if (is_mouse_pressed) {
-    //movie_slider->setValue(e.value);
     faceMovie.setPosition(e.value / movie_duration);
     screenMovie.setPosition(e.value / movie_duration);
   }
+}
+
+void ofApp::onMatrixEvent(ofxDatGuiMatrixEvent e) {
+
 }
 
 void ofApp::keyPressed(int key){
@@ -140,12 +142,14 @@ void ofApp::mouseDragged(int x, int y, int button){
 void ofApp::mousePressed(int x, int y, int button){
   is_mouse_pressed = true;
   faceMovie.setPaused(true);
+  screenMovie.setPaused(true);
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
   is_mouse_pressed = false;
   faceMovie.setPaused(false);
+  screenMovie.setPaused(false);
 }
 
 //--------------------------------------------------------------

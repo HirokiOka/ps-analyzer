@@ -23,6 +23,7 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
     void onSliderEvent(ofxDatGuiSliderEvent e);
+    void onMatrixEvent(ofxDatGuiMatrixEvent e);
 
     ofVideoPlayer faceMovie;
     ofVideoPlayer screenMovie;
@@ -45,7 +46,6 @@ class ofApp : public ofBaseApp{
     ofxDatGuiSlider* movie_slider;
     ofxDatGuiComponent* slider_component;
     ofxDatGuiMatrix* matrix;
-    //ofxDatGuiComponent* matrix_component;
     vector<ofxDatGuiComponent*> components;
 
 };
