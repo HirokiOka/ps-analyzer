@@ -23,6 +23,8 @@ class ofApp : public ofBaseApp{
 
     string face_movie_path = "movies/reflection_cam.mp4";
     string screen_movie_path = "movies/reflect_screen_trimed.mov";
+    string of_csv_path = "reflection_cam.csv";
+    string font_path = "ofxbraitsch/fonts/Verdana.ttf";
 
     static const int AU_NUM = 18;
     static const int PLOTTER_NUM = 17;
@@ -32,6 +34,7 @@ class ofApp : public ofBaseApp{
     static const int AU_C_INDEX_END = 713;
     static const int MOVIE_WIDTH = 640;
     static const int MOVIE_HEIGHT = 400;
+    static const int MOVIE_X_OFFSET = 400;
     static const int FRAME_RATE = 30;
 
     float gaze_0_x = 0.0, gaze_0_y = 0.0;

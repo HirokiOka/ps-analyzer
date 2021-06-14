@@ -3,7 +3,7 @@
 void ofApp::setup(){
   ofBackground(0);
   ofSetFrameRate(FRAME_RATE);
-  verdana.load("ofxbraitsch/fonts/Verdana.ttf", 18);
+  verdana.load(font_path, 18);
 
   //load and play movies
   if (face_movie.load(face_movie_path)) face_movie.play();
@@ -17,8 +17,8 @@ void ofApp::setup(){
   movie_slider = new ofxDatGuiSlider("", 0.0, movie_duration);
   movie_slider->onSliderEvent(this, &ofApp::onSliderEvent);
   slider_component = movie_slider;
-  slider_component->setPosition(400, 340);
-  slider_component->setWidth(640, 0);
+  slider_component->setPosition(MOVIE_X_OFFSET, 340);
+  slider_component->setWidth(MOVIE_WIDTH, 0);
 
   //AU_C matrix
   matrix = new ofxDatGuiMatrix("AU_C", AU_NUM, true);
@@ -68,7 +68,7 @@ void ofApp::setup(){
   }
   */
   //openFace
-  if (of_csv.load("reflection_cam.csv")) {
+  if (of_csv.load(of_csv_path)) {
     for (size_t i = 0; i < AU_NUM; ++i) {
       string au_labels = of_csv[0][AU_C_INDEX_HEAD + i];
       string au_num = ofToString(au_labels[3]) + ofToString(au_labels[4]);
@@ -121,10 +121,9 @@ void ofApp::update(){
   //AU_C matrix
   if (current_frame > 0) {
     for (int i = AU_C_INDEX_HEAD; i < AU_C_INDEX_END + 1; ++i) {
-      int au_c_value = stoi(of_csv[current_frame][i]);
+      //int au_c_value = stoi(of_csv[current_frame][i]);
       int matrix_index = i - AU_C_INDEX_HEAD; 
       if(stoi(of_csv[current_frame][i])) {
-        //cout << "matrix index: " << matrix_index << "\n";
         matrix->getButtonAtIndex(matrix_index-1)->setSelected(false);
       } else {
         matrix->getButtonAtIndex(matrix_index-1)->setSelected(true);
@@ -138,13 +137,13 @@ void ofApp::update(){
 void ofApp::draw(){
   ofSetColor(255);
 
-  face_movie.draw(400+MOVIE_WIDTH, 0, -MOVIE_WIDTH, MOVIE_HEIGHT);
-  screen_movie.draw(400, 360, MOVIE_WIDTH, MOVIE_HEIGHT);
+  face_movie.draw(MOVIE_X_OFFSET+MOVIE_WIDTH, 0, -MOVIE_WIDTH, MOVIE_HEIGHT);
+  screen_movie.draw(MOVIE_X_OFFSET, 360, MOVIE_WIDTH, MOVIE_HEIGHT);
 
   ofSetColor(0, 255, 0);
-  float gaze_x = ofMap(gaze_0_x, -1, 1,  screen_movie.getWidth(), -50); 
-  float gaze_y = ofMap(gaze_0_y, -1, 1, 0, screen_movie.getHeight()); 
-  ofDrawCircle(gaze_x, gaze_y+200, 5);
+  float gaze_x = ofMap(gaze_0_x, -1, 1,  MOVIE_WIDTH + 800, -800); 
+  float gaze_y = ofMap(gaze_0_y, -1, 1, 0, MOVIE_HEIGHT); 
+  ofDrawCircle(MOVIE_X_OFFSET + gaze_x, 300 + gaze_y, 5);
 
   for (size_t i = 0; i < components.size(); ++i) components[i]->draw();
   slider_component->draw();
