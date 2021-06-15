@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxDatGui.h"
 #include "ofxCsv.h"
+#include "ofxJSON.h"
 
 class ofApp : public ofBaseApp{
 	public:
@@ -20,11 +21,13 @@ class ofApp : public ofBaseApp{
     ofVideoPlayer screen_movie;
     ofxCsv of_csv;
     ofxCsv mb_csv;
+    ofxJSONElement json;
 
-    string face_movie_path = "movies/reflection_cam.mp4";
-    string screen_movie_path = "movies/reflect_screen_trimed.mov";
-    string of_csv_path = "reflection_cam.csv";
+    string face_movie_path = "movies/fizzbuzz_js_face.mp4";
+    string screen_movie_path = "movies/fizzbuzz_js_screen.mov";
+    string of_csv_path = "fizzbuzz_js_face.csv";
     string font_path = "ofxbraitsch/fonts/Verdana.ttf";
+    string esprima_path = "esprima.json";
 
     static const int AU_NUM = 18;
     static const int PLOTTER_NUM = 17;

@@ -1,3 +1,4 @@
 ofxDatGui
 ofxCsv
+ofxJSON
 

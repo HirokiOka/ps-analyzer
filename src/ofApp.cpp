@@ -26,6 +26,26 @@ void ofApp::setup(){
   matrix->setWidth(200, 60);
   matrix->setRadioMode(true);
 
+  //load json
+  if (json.open(esprima_path)) {
+    for (size_t i = 0; i < 3; ++i) {
+      if (i == 0) {
+        plotters[i] = new ofxDatGuiValuePlotter("cyclomatic", 0, 10); 
+      } else if (i == 1) {
+        plotters[i] = new ofxDatGuiValuePlotter("maintainability", 0, 200); 
+      } else if (i == 2) {
+        plotters[i] = new ofxDatGuiValuePlotter("sloc", 0, 20); 
+      }
+
+      plotters[i]->setDrawMode(ofxDatGuiGraph::LINES);
+      plotters[i]->setSpeed(3.5);
+      component = plotters[i];
+      component -> setPosition(0, i * 80);
+      component->setWidth(200, 60);
+      components.push_back(component);
+    }
+  }
+
   //load csv files
   /*
   if (of_csv.load("fizzbuzz_processed.csv")) {
@@ -78,6 +98,7 @@ void ofApp::setup(){
     }
   }
 
+
 }
 
 void ofApp::update(){
@@ -111,6 +132,20 @@ void ofApp::update(){
       components[i]->update();
     }
     */
+
+    for (size_t i = 0; i < 3; ++i) {
+      float current_value = 0.0;
+      string time = ofToString(elapsed_movie_sec);
+      if (i == 0) {
+        current_value = json[time]["cyclomatic"].asFloat();
+      } else if (i == 1) {
+        current_value = json[time]["maintainability"].asFloat();
+      } else if (i == 2) {
+        current_value = json[time]["sloc"].asFloat();
+      }
+      plotters[i]->setValue(current_value);
+      components[i]->update();
+    }
   }
 
   
