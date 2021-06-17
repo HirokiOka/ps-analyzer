@@ -22,7 +22,7 @@ void ofApp::setup(){
 
   //AU_C matrix
   matrix = new ofxDatGuiMatrix("AU_C", AU_NUM, true);
-  matrix->setPosition(0, 400);
+  matrix->setPosition(0, 180);
   matrix->setWidth(200, 60);
   matrix->setRadioMode(true);
 
@@ -30,18 +30,16 @@ void ofApp::setup(){
   if (json.open(esprima_path)) {
     for (size_t i = 0; i < 3; ++i) {
       if (i == 0) {
-        plotters[i] = new ofxDatGuiValuePlotter("cyclomatic", 0, 10); 
+        sliders[i] = new ofxDatGuiSlider("cyclomatic", 0, 10); 
       } else if (i == 1) {
-        plotters[i] = new ofxDatGuiValuePlotter("maintainability", 0, 200); 
+        sliders[i] = new ofxDatGuiSlider("maintainability", 0, 200); 
       } else if (i == 2) {
-        plotters[i] = new ofxDatGuiValuePlotter("sloc", 0, 20); 
+        sliders[i] = new ofxDatGuiSlider("sloc", 0, 20); 
       }
 
-      plotters[i]->setDrawMode(ofxDatGuiGraph::LINES);
-      plotters[i]->setSpeed(3.5);
-      component = plotters[i];
-      component -> setPosition(0, i * 80);
-      component->setWidth(200, 60);
+      component = sliders[i];
+      component->setPosition(0, i * 30);
+      component->setWidth(200, 100);
       components.push_back(component);
     }
   }
@@ -96,8 +94,15 @@ void ofApp::setup(){
       matrix->getButtonAtIndex(i)->setMIndex(label-1);
       matrix->getButtonAtIndex(i)->setSelected(true);
     }
-  }
 
+    confidence_plotter = new ofxDatGuiValuePlotter("CONFIDENCE", 0, 1);
+    confidence_plotter->setDrawMode(ofxDatGuiGraph::LINES);
+    confidence_plotter->setSpeed(4);
+    component = confidence_plotter;
+    component->setPosition(0, 90);
+    component->setWidth(200, 100);
+    components.push_back(component);
+  }
 
 }
 
@@ -143,11 +148,9 @@ void ofApp::update(){
       } else if (i == 2) {
         current_value = json[time]["sloc"].asFloat();
       }
-      plotters[i]->setValue(current_value);
-      components[i]->update();
+      sliders[i]->setValue(current_value);
     }
   }
-
   
   //slider
   if (!is_mouse_pressed) movie_slider->setValue(elapsed_movie_sec);
@@ -164,8 +167,11 @@ void ofApp::update(){
         matrix->getButtonAtIndex(matrix_index-1)->setSelected(true);
       }
     }
+    float current_confidence = stof(of_csv[current_frame][3]);
+    confidence_plotter->setValue(current_confidence);
   }
   matrix->update();
+  for (size_t i = 0; i < components.size(); ++i) components[i]->update();
 
 }
 

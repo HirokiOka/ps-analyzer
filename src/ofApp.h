@@ -48,8 +48,10 @@ class ofApp : public ofBaseApp{
     ofTrueTypeFont verdana;
     ofxDatGuiValuePlotter* plotters[PLOTTER_NUM];
     ofxDatGuiValuePlotter* mb_plotters[MB_PLOTTER_NUM];
+    ofxDatGuiValuePlotter* confidence_plotter;
     ofxDatGuiSlider* movie_slider;
     ofxDatGuiComponent* slider_component;
+    ofxDatGuiSlider* sliders[3];
     ofxDatGuiMatrix* matrix;
     vector<ofxDatGuiComponent*> components;
 
