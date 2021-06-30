@@ -23,11 +23,11 @@ class ofApp : public ofBaseApp{
     ofxCsv mb_csv;
     ofxJSONElement json;
 
-    string face_movie_path = "movies/fizzbuzz_js_face.mp4";
-    string screen_movie_path = "movies/fizzbuzz_js_screen.mov";
+    string face_movie_path = "movies/cam-2021-06-30_14.00.52.mov";
+    string screen_movie_path = "movies/screen-2021-06-30_14.00.52.mov";
     string of_csv_path = "fizzbuzz_js_face.csv";
+    string mb_csv_path = "20210630140109.csv";
     string font_path = "ofxbraitsch/fonts/Verdana.ttf";
-    string esprima_path = "esprima.json";
 
     static const int AU_NUM = 18;
     static const int PLOTTER_NUM = 17;
